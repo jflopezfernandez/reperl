@@ -27,6 +27,17 @@ void fatal_error(const char* error_message) {
     exit(EXIT_FAILURE);
 }
 
+/**
+ * This is the entry point of the engine. At the time of
+ * writing, there are no command-line options which the
+ * program will accept; it will simply interpret any and all
+ * arguments as filenames to be opened, read, and compiled
+ * and/or interpreted.
+ *
+ * @todo Implement command-line option: --help
+ * @todo Implement command-line option: --version
+ *
+ */
 int main(int argc, char *argv[])
 {
     /**
