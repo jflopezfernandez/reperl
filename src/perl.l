@@ -16,7 +16,22 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+%option noyywrap
+
+%{
+
 #include "perl.h"
+
+int chars = 0;
+
+%}
+
+%%
+
+[ \t\n]+    { /** Don't count whitespace. */ }
+.           { ++chars; }
+
+%%
 
 /**
  * Fatal errors are, obviously, fatal; the program does not
@@ -62,13 +77,20 @@ int main(int argc, char *argv[])
         FILE* input_file = fopen(*argv, "r");
 
         /**
-         * For now, simply echo the file to standard output.
+         * Prepare the scanner for reading the newly-opened
+         * file.
          */
-        int current_char = NUL;
+        yyrestart(input_file);
 
-        while ((current_char = fgetc(input_file)) != EOF) {
-            fputc(current_char, stdout);
-        }
+        /**
+         * Begin tokenizing the input file.
+         */
+        yylex();
+
+        /**
+         * Print the number of characters in the input file.
+         */
+        printf("Characters: %d\n", chars);
 
         /**
          * Close the filehandle.
