@@ -51,5 +51,11 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Ignore tag files for now
+.tags
+
+# Directories
+docs/html/
+
 # Target Files
 perl

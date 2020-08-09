@@ -7,6 +7,8 @@ vpath %.h include
 MKDIR    := mkdir -p
 RM       := rm -f
 
+DOXYGEN  := doxygen docs/Doxyfile
+
 LEX      := flex
 LEXFLAGS := --full --yylineno --verbose --perf-report --align --posix-compat --nodefault
 
@@ -31,7 +33,7 @@ TARGET   := perl
 .PHONY: all
 all: $(TARGET)
 
-perl: $(OBJS)
+$(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 perl.o: perl.c
@@ -61,6 +63,20 @@ perl.c: perl.l ;
 # %.o: %.asm
 # 	$(AS) $(ASFLAGS) -o $@ $^
 
+.PHONY: docs
+docs: $(TARGET) | html-docs
+
+.PHONY: html-docs
+html-docs:
+	$(DOXYGEN)
+
 .PHONY: clean
 clean:
 	$(RM) $(LEXS) $(patsubst %.l,%.c,$(LEXS)) $(OBJS) $(TARGET)
+
+.PHONY: clean-docs
+clean-docs:
+	$(RM) -r docs/html/
+
+.PHONY: dist-clean
+dist-clean: clean-docs clean
